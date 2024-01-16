@@ -6,28 +6,53 @@ const port = 3000;
 async function fetchData(size) {
   return new Promise(resolve => {
     setTimeout(() => {
-      const data = Array.from({ length: size }, () => Math.floor(Math.random() * 1000));
+      const data = Array.from({ length: size }, () => Math.floor(Math.random() * 100000));
       resolve(data);
     }, 1000);
   });
 }
 
-// Calculate the sum of an array of numbers
-function calculateSum(arr) {
-  return arr.reduce((acc, num) => acc + num, 0);
+// Quick Sort algorithm
+function quickSort(arr) {
+  if (arr.length <= 1) {
+    return arr;
+  }
+
+  const pivot = arr[arr.length - 1];
+  const left = [];
+  const right = [];
+
+  for (let i = 0; i < arr.length - 1; i++) {
+    arr[i] <= pivot ? left.push(arr[i]) : right.push(arr[i]);
+  }
+
+  return [...quickSort(left), pivot, ...quickSort(right)];
 }
 
 app.get('/', async (req, res) => {
-  const dataSize = 100000;
+  const dataSize = 15000;
   const data = await fetchData(dataSize);
 
-  // Calculate the sum of the generated data
-  const sum = calculateSum(data);
+  // Create a copy of the data to avoid modifying the original array
+  const unsortedData = [...data];
+  
+  // Sort the data using Quick Sort
+  const sortedData = quickSort(unsortedData);
 
-  // Send the sum as a response
-  res.send(`Sum of 100,000 random numbers: ${sum}`);
+  // Send both unsorted and sorted data as a response
+  res.send(`
+    <html>
+      <head>
+        <title>Quick Sort Result</title>
+      </head>
+      <body style="font-family: 'Courier New', monospace;">
+        <h1>Quick Sort Result</h1>
+        <p>Sorted Data: ${sortedData.join(', ')}</p>
+      </body>
+    </html>
+  `);
 });
 
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`Quick Sort app listening at http://localhost:${port}`);
 });

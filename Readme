@@ -1,2 +1,2 @@
-docker build -t intermediate-node-app .
-docker run -p 3000:3000 intermediate-node-app
+docker build -t node_nlogn .
+docker run -p 3000:3000 node_nlogn
